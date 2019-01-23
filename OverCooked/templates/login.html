@@ -1,0 +1,59 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <title>MIS Login</title><meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="{%  static 'css/bootstrap.min.css' %}" />
+	<link rel="stylesheet" href="{%  static 'css/bootstrap-responsive.min.css' %}" />
+    <link rel="stylesheet" href="{%  static 'css/matrix-login.css' %}" />
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <style type="text/css">
+        input{
+            font-family: "Microsoft Yahei";
+        }
+        .control-label{
+            color: #B2DFEE;
+            padding-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginbox">  
+        <div class="control-group normal_text"> 
+            <h2 style="color:#B2DFEE;font-size:28px;">煮糊了中餐厅管理信息系统平台</h2>
+        </div>          
+        <form id="loginform" class="form-vertical" action="/login/" method="post">
+            {% csrf_token %}
+            <div class="control-group">
+                <label class="control-label">登录账号</label>
+                <div class="controls">
+                    <div class="main_input_box">
+                        <span class="add-on bg_lg"><i class="icon-user" style="font-size:16px;"></i></span><input name="username" type="text" value="admin" />
+                    </div>
+                </div>
+            </div>
+            <div class="control-group2">
+                <label class="control-label">登录密码</label>
+                <div class="controls">
+                    <div class="main_input_box">
+                        <span class="add-on bg_ly"><i class="icon-lock" style="font-size:16px;"></i></span><input name="password" type="password" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions" style="text-align: center">
+                <input type="submit" id="checkBtn" class="btn btn-success" style="width: 440px; display: inline-block" value=" 登&nbsp;&nbsp;&nbsp;&nbsp;录"/>
+            </div>
+            <div class="control-group normal_text">
+                <div style="font-size:14px;color:gray;">推荐使用webkit内核浏览器，如chrome等</div>
+            </div>
+        </form>
+    </div>
+    
+    <script src="{%  static 'js/jquery.min.js' %}"></script>
+    <script src="{%  static 'js/matrix.login.js' %}"></script>
+</body>
+
+</html>

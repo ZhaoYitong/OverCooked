@@ -1,0 +1,161 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>供应商管理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/matrix-style2.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/matrix-media.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/validate.extend.css' %}"  />
+  <link href="{%  static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+</head>
+<body>
+<div id="content">
+  <div id="content-header">
+    <h1>供应商管理</h1>
+  </div>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+            <h5>供应商列表</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>供应商名称</th>
+                  <th>负责人</th>
+                  <th>联系方式</th>
+                  <th>地址</th>
+                  <th></th>
+                </tr>
+              </thead>
+                {% for item in supplier %}
+                  <tr id="supplier{{ item.id }}">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.charger }}</td>
+                    <td>{{ item.phone }}</td>
+                    <td>{{ item.address }}</td>
+                    <td><a class="tip" onclick="del(this)" id="del{{ item.id }}"><i class="icon-remove"></i></a></td>
+                  </tr>
+                {% endfor %}
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+          <div class="widget-box">
+            <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+            <h5>添加供应商</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <form action="/warehouse/supplier/" method="post" class="form-horizontal">
+              <div class="control-group">
+                <label class="control-label">名称 :</label>
+                <div class="controls">
+                  <input type="text" class="span3" name="name" id="name"/>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label">负责人 :</label>
+                <div class="controls">
+                  <input type="text" class="span3" name="charger" id="charger"/>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label">联系方式 :</label>
+                <div class="controls">
+                  <textarea class="span8" name="phone" id="phone"></textarea>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label">地址 :</label>
+                <div class="controls">
+                  <textarea class="span8" name="address" id="address"></textarea>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-success">提交</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/newValidate/jquery.validate.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/newValidate/jquery.validate.extend.js' %}"></script>
+<script type="text/javascript"  src="{% static 'js/jquery.ui.custom.js' %}"></script>
+<script type="text/javascript"  src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript"  src="{% static 'js/nicescroll/jquery.nicescroll.min.js' %}"></script>
+<script type="text/javascript"  src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#querytable').DataTable({
+    "bJQueryUI": true,
+    "sPaginationType": "full_numbers",
+    "sDom": '<""l>t<"F"fp>'
+  });
+});
+function del(elem) {
+  var id = elem.id.substring(3);
+  $.ajax({
+    type: "POST",
+    url: "/warehouse/del_supplier/",
+    data: JSON.stringify({'command': 'delete', 'id': id}),
+    datatype: "text",
+    success: function(result) {
+      $(window).attr('location','/warehouse/supplier/');
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      alert(errorThrown);
+      },
+  });
+}
+function printSheet() {
+}
+$(document).ready(function () {
+        $(".form-horizontal").validate({
+            rules: {
+                name: { required: true},
+                charger: { required: true},
+                phone: {required: true},
+                address: {required: true}
+            },
+
+            messages: {
+                name: {
+                    required: "供应商名称不能为空",
+                },
+                charger: {
+                    required: "负责人不能为空",
+                },
+                phone: {
+                    required: "联系方式不能为空"
+                },
+                address: {
+                    required: "地址不能为空"
+                }
+            }
+        });
+});
+</script>
+</body>
+
+
+</html>

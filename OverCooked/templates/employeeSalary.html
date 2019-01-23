@@ -1,0 +1,175 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>员工工资发放</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/uniform.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/select2.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/matrix-style2.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/matrix-media.css' %}" />
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.css' %}"  />
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/validate.extend.css' %}"  />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<div id="content">
+  <div id="content-header">
+      <h1>员工工资发放</h1>
+  </div>
+    <div class="container-fluid">
+       <div class="row-fluid">
+        <div class="span12">
+          <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>员工工资表</h5>
+          </div>
+              <div class="widget-content nopadding ">
+                  <table class="table table-bordered data-table" id="salaryTable">
+                      <thead align="center">
+                        <tr>
+{#                          <th>序号</th>#}
+                          <th>姓名</th>
+                          <th>工号</th>
+                          <th>工作部门</th>
+                          <th>职位</th>
+                          <th>总奖金</th>
+                          <th>总扣除</th>
+                          <th>基本工资</th>
+                          <th>最终工资</th>
+                          <th>单位</th>
+                          <th>制表日期</th>
+                          <th>是否发放</th>
+                        </tr>
+                      </thead>
+                      <tbody align="center">
+                      {% for staff in context_Salary %}
+                         <tr>
+{#                            <td>{{ forloop.counter }}</td>#}
+                            <td>{{ staff.name }}</td>
+                            <td>{{ staff.staffId }}</td>
+                            <td>{{ staff.department }}</td>
+                            <td>{{ staff.position }}</td>
+                            <td>{{ staff.bonus|floatformat:2 }}</td>
+                            <td>{{ staff.penalty|floatformat:2 }}</td>
+                            <td>{{ staff.baseWage }}</td>
+                            <td>{{ staff.salary|floatformat:2 }}</td>
+                            <td>{{ staff.unit }}</td>
+                            <td>{{ staff.releaseDate}}</td>
+                            <td>{{ staff.checkStatus }}</td>
+                         </tr>
+                      {% endfor %}
+                      </tbody>
+                  </table>
+
+              </div>
+          </div>
+
+
+         <div style="margin-left: 20px"> <a class="btn btn-primary" onclick="printData()" ><i class="icon-print"></i> 打印工资表</a>
+            </div>
+                <div class="widget-box">
+                <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+                  <h5>准备发放工资</h5>
+                </div>
+                    <div class="widget-content nopadding">
+                     <form action="#" method="post" id="form_salary"  class="form-horizontal form_salry" style="margin-top: 20px">
+                         {% csrf_token %}
+                        <div class="control-group">
+                          <label for="normal" class="control-label">员工工号</label>
+                          <div class="controls">
+                            <input type="text"  class="span4 mask text Sal_staffId" name="Sal_staffId">
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label for="normal" class="control-label">姓名</label>
+                          <div class="controls">
+                            <input type="text"  class="span4 mask text Sal_name" name="Sal_name">
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label for="normal" class="control-label">基本工资</label>
+                          <div class="controls">
+                            <input type="text"  class="span4 mask text Sal_baseWage"  name="Sal_baseWage" value="0.00">
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">记录时间:</label>
+                          <div class="controls">
+                            <input type="text" class="span4 mask text Sal_logtime" id="logTime" name="Sal_logtime" placeholder="2018-06-13"/>
+                          </div>
+                        </div>
+                       <div class="form-actions">
+                          <button type="submit" class="btn btn-success">提交</button>
+                        </div>
+
+                         <!-- 提交后生成工资表 -->
+                      </form>
+                    </div>
+                </div>
+        </div>
+       </div>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/newValidate/jquery.validate.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/newValidate/jquery.validate.extend.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.uniform.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/datepicker/datepicker.extend.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/matrix.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/matrix.tables.js' %}"></script>
+<script type="text/javascript">
+/* form validation  */
+$(document).ready(function () {
+    $("#form_salary").validate({
+        rules: {
+            Sal_staffId: { required: true},
+            Sal_name: {required: true},
+            Sal_baseWage: { required: true,minNumber: true,isFloat:true},
+        },
+        messages: {
+            Sal_staffId: {
+                required: "员工工号不能为空",
+            },
+            Sal_name: {
+                required: "员工名不能为空",
+            },
+            Sal_baseWage: {
+                required: "基本工资不能为空",
+                minNumber: "请输入正确格式",
+                isFloat:  "请输入正确格式",
+            },
+        }
+    });
+});
+/* form validation */
+</script>
+<script type="text/javascript">
+// 打印工资表
+function printData()
+{
+   var divToPrint=document.getElementById("salaryTable");
+   divToPrint.style.fontSize="10px";
+   divToPrint.style.lineHeight="20px";
+    console.log(divToPrint.outerHTML);
+    newWin= window.open("");
+    newWin.document.write("<h1 style='text-align:center'>员工工资表</h1>",
+        "<div><span align='left'>经办人_________</span></div>",
+        divToPrint.outerHTML,
+    "<h5 style='text-align:right'>审核状态_______</h5>",);
+    newWin.print();
+    newWin.close();
+}
+// 打印工资表
+</script>
+</body>
+</html>

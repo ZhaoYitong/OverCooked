@@ -1,0 +1,217 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>员工信息录入</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/matrix-style2.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/matrix-media.css' %}" />
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.css' %}"  />
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/validate.extend.css' %}"  />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<div id="content">
+  <div id="content-header">
+      <h1>员工入职信息录入</h1>
+{{destination}}
+  </div>
+    <div class="container-fluid">
+       <div class="row-fluid">
+           <div class="span8">
+            <div class="widget-box">
+                <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                    <h5>基本信息</h5>
+                </div>
+                <div class="widget-content nopadding">
+                    <form method="post" class="form-horizontal" id="EmployeeForm" enctype="multipart/form-data"  accept-charset="utf-8">
+                        {% csrf_token %}
+                        <div class="control-group">
+                          <label class="control-label">姓名 :</label>
+                          <div class="controls">
+                            <input type="text" class="span6" placeholder="张XX" id="name" name="name"/>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">性别</label>
+                          <div class="controls">
+                            <label>
+                              <input type="radio" name="radios" value='男' checked />
+                              男</label>
+                            <label>
+                              <input type="radio" name="radios" value='女' />
+                              女</label>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">年龄:</label>
+                          <div class="controls">
+                            <input type="text" class="span6" id="age" name="age" maxlength="2"/>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">民族:</label>
+                          <div class="controls">
+                            <input type="text" class="span6" id="ethnic" name="ethnic" maxlength="50" placeholder="汉族"/>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">联系电话</label>
+                          <div class="controls">
+                            <input type="text"  class="span6" id="phoneNumber" name="phoneNumber" placeholder="xxxxxxxxxxx" maxlength="11" />
+                          </div>
+                        </div>
+
+                        <div class="control-group">
+                          <label class="control-label" id="Email">邮箱(可选) :</label>
+                          <div class="controls">
+                            <input type="text" class="span6" id="email" name="email" placeholder="xxx@163.com" maxlength="30"/>
+                          </div>
+                        </div>
+
+                        <div class="control-group">
+                          <label class="control-label">身份证号:</label>
+                          <div class="controls">
+                            <input type="text" class="span6" id="IDNumber"name="IDNumber"/>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">银行卡号:</label>
+                          <div class="controls">
+                            <input type="text" class="span6" id="AccountantNumber" name="AccountantNumber" maxlength="20"/>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">工作部门:</label>
+                          <div class="controls">
+                              <select name="selectDepartment" id="selectDepartment">
+                                <option disabled selected value >--</option>
+                                <option value="前台" >前台</option>
+                                <option value="厨房" >厨房</option>
+                                <option value="库存采购" >库存采购</option>
+                                <option value="人事" >人事</option>
+                                <option value="财务" >财务</option>
+                              </select>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">员工工号:</label>
+                          <div class="controls">
+                            <input type="text" class="span6" id="staffId" name="staffId" maxlength="20"/>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">员工职位:</label>
+                          <div class="controls">
+                              <select name="selectPosition" id="selectPosition">
+                                <option disabled selected value >--</option>
+                                <option value="总经理" >总经理</option>
+                                <option value="部门经理" >部门经理</option>
+                                <option value="员工" >员工</option>
+                              </select>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">入职时间:</label>
+                          <div class="controls">
+                            <input type="text" class="span6" id="entryTime" name="entryTime" placeholder="2018-06-13"/>
+                          </div>
+                        </div>
+                        <div class="control-group">
+                          <label class="control-label">个人照片</label>
+                          <div class="controls">
+                            <input type="file" id="personalPhoto" name="personalPhoto"/>
+                            <span class="help-block"><b>照片格式：一寸免冠</b></span>
+                          </div>
+                        </div>
+                        <div class="form-actions">
+                          <button type="submit" class="submit btn btn-success" >提交保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+           </div>
+       </div>
+    </div>
+    <hr>
+</div>
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/newValidate/jquery.validate.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/newValidate/jquery.validate.extend.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/datepicker/datepicker.extend.js' %}"></script>
+<script type="text/javascript">
+/* form validation  */
+$(document).ready(function () {
+    $("#EmployeeForm").validate({
+        rules: {
+            name: { required: true},
+            ethnic: {required: true},
+            phoneNumber: { required: true, isMobile: true},
+            email: {checkEmail: true},
+            age: {required: true, ageValid: true},
+            IDNumber: {required: true, isIdCardNo: true},
+            AccountantNumber: {required: true, isAccount: true },
+            entryTime: {required:true},
+            personalPhoto: {required:true, isImage: true},
+            selectDepartment:{required: true},
+            staffId: {required: true},
+            selectPosition: {required: true},
+
+        },
+        messages: {
+            name: {
+                required: "用户名不能为空",
+            },
+            ethnic: {
+                required: "民族不能为空",
+            },
+            phoneNumber: {
+                required: "联系电话不能为空",
+                isMobile: "请重新输入联系电话"
+            },
+            email: {
+                checkEmail: "请输入正确的邮箱"
+            },
+            age: {
+                required: "请输入年龄",
+                ageValid: "请输入正确的年龄(18~60)"
+            },
+            IDNumber: {
+                required: "请输入身份证号",
+                isIdCardNo:"请重新输入身份证号"
+            },
+            AccountantNumber: {
+                required: "请输入银行卡号",
+                isAccount: "请输入正确的银行卡号(16~19位)"
+            },
+            entryTime: {
+                required: "请重新选择入职时间"
+            },
+            personalPhoto:{
+                required: "请上传员工照片",
+                isImage: "图片格式有误"
+            },
+            selectDepartment:{
+                required: "请选择部门"
+            },
+            staffId:{
+                required: "请输入员工工号"
+            },
+            selectPosition: {
+                required: "请选择职位"
+            },
+        }
+    });
+});
+/* form validation */
+</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>煮糊了</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/matrix-style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/matrix-media.css' %}" />
+    <link href="{%  static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <!--Header-part-->
+    <div id="header">
+      <h1><a href="index.html">餐厅管理信息系统</a></h1>
+    </div>
+    <!--close-Header-part--> 
+
+    <!--top-Header-menu-->
+    <div id="user-nav" class="navbar navbar-inverse">
+        <ul class="nav">
+            <li id="profile-messages" >
+                <a title="" href="#">
+                    <i class="icon icon-user"></i>&nbsp;
+                    <span class="text">欢迎你，{{ user }}</span>&nbsp;
+                </a>
+            </li>
+            <li class=""><a title="" href="#"><i class="icon icon-cog"></i> <span class="text">&nbsp;设置</span></a></li>
+            <li class=""><a title="" href="/logout/"><i class="icon icon-share-alt"></i> <span class="text">&nbsp;退出系统</span></a></li>
+        </ul>
+    </div>
+    <!--close-top-Header-menu-->
+
+    <!--sidebar-menu-->
+    <div id="sidebar" style="OVERFLOW-Y: auto; OVERFLOW-X:hidden;">
+        <ul>
+            <li class="submenu active">
+                <a class="menu_a" link=""><i class="icon icon-home"></i> <span>控制面板</span></a>
+            </li>
+            <li class="submenu"> 
+                <a href="#">
+                    <i class="icon icon-table"></i> 
+                    <span>前台</span>
+                    <span class="label label-important">4</span>
+                </a>
+                <ul>
+                    <li><a class="menu_a" link="/foreground/ordering/"><i class="icon icon-caret-right"></i>点单</a></li>
+                    <li><a class="menu_a" link="/foreground/ordered"><i class="icon icon-caret-right"></i>订单管理</a></li>
+                    <li><a class="menu_a" link="/foreground/food/"><i class="icon icon-caret-right"></i>菜品管理</a></li>
+                    <li><a class="menu_a" link="/foreground/sale/"><i class="icon icon-caret-right"></i>销售统计</a></li>
+                </ul>
+            </li>
+            <li class="submenu">
+				<a href="#">
+                    <i class="icon icon-th"></i> 
+                    <span>厨房</span>
+                    <span class="label label-important">2</span>
+                </a>
+				<ul>
+                    <li><a class="menu_a" link="/kitchen/distribution/"><i class="icon icon-caret-right"></i>生产管理</a></li>
+                    <li><a class="menu_a" link="/kitchen/prepare/"><i class="icon icon-caret-right"></i>预加工管理</a></li>
+                </ul>
+            </li>
+            <li class="submenu"> 
+                <a href="#">
+                    <i class="icon icon-stop"></i> 
+                    <span>仓库</span>
+                    <span class="label label-important">4</span>
+                </a>
+                <ul>
+                    <li><a class="menu_a" link="/warehouse/entry/"><i class="icon icon-caret-right"></i>领料登记</a></li>  <!-- 动态添加 -->
+                    <li><a class="menu_a" link="/warehouse/delivery/"><i class="icon icon-caret-right"></i>采购入库</a></li>
+                    <li><a class="menu_a" link="/warehouse/inventory/"><i class="icon icon-caret-right"></i>库存盘点</a></li>  <!-- 打印盘点表 -->
+                    <li><a class="menu_a" link="/warehouse/query/"><i class="icon icon-caret-right"></i>库存查询</a></li>
+                </ul>
+            </li>
+            <li class="submenu"> 
+                <a href="#">
+                    <i class="icon icon-shopping-cart"></i> 
+                    <span>采购</span>
+                    <span class="label label-important">3</span>
+                </a>
+                <ul>
+                    <li><a class="menu_a" link="/warehouse/purchase/"><i class="icon icon-caret-right"></i>采购订单</a></li>  <!-- excel导入 链接采购入库、采购付款-->
+                    <li><a class="menu_a" link="/warehouse/purchased/"><i class="icon icon-caret-right"></i>采购台账</a></li>  <!-- 可取消采购订单 -->
+                    <li><a class="menu_a" link="/warehouse/supplier/"><i class="icon icon-caret-right"></i>供应商管理</a></li>  <!-- 不收集报价信息 -->
+                </ul>
+            </li>
+            <li class="submenu"> 
+                <a href="#">
+                    <i class="icon icon-user"></i> 
+                    <span>人事系统</span>  
+                    <span class="label label-important">5</span>
+                </a>
+                <ul>
+                    <li><a class="menu_a" link="/personnel/employeeInfo"><i class="icon icon-caret-right"></i>员工信息录入</a></li>
+                    <li><a class="menu_a" link="/personnel/employeeBasicInfo"><i class="icon icon-caret-right"></i>员工基本信息</a></li>
+                    <li><a class="menu_a" link="/personnel/employeeDistribute"><i class="icon icon-caret-right"></i>员工排班</a></li>
+                    <li><a class="menu_a" link="/personnel/employeePerform"><i class="icon icon-caret-right"></i>员工绩效</a></li>
+                    <li><a class="menu_a" link="/personnel/employeeSalary"><i class="icon icon-caret-right"></i>工资发放</a></li>
+                </ul>
+            </li>
+            <li class="submenu"> 
+                <a href="#">
+                    <i class="icon icon-info-sign"></i> 
+                    <span>财务系统</span>
+                    <span class="label label-important">4</span>
+                </a>
+                <ul>
+                    <li><a class="menu_a" link="/financial/procurementList_Cost"><i class="icon icon-caret-right"></i>采购付款</a></li>
+                    <li><a class="menu_a" link="/financial/financialSalary"><i class="icon icon-caret-right"></i>工资打款</a></li>
+                    <li><a class="menu_a" link="/financial/financialStatement"><i class="icon icon-caret-right"></i>资金汇总</a></li>
+                    <li><a class="menu_a" link="/financial/daily"><i class="icon icon-caret-right"></i>营业日结</a></li>
+
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!--sidebar-menu-->
+
+    <!--main-container-part-->
+    <div id="content">
+        <iframe src="" id="iframe-main" frameborder='0' style="width:100%;"></iframe>
+    </div>
+    <!--end-main-container-part-->
+
+    <script src="{% static 'js/excanvas.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.ui.custom.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/nicescroll/jquery.nicescroll.min.js' %}"></script>
+    <script src="{% static 'js/matrix.js' %}"></script>
+
+
+    <script type="text/javascript">
+
+    //初始化相关元素高度
+    function init(){
+        $("body").height($(window).height()-80);
+        $("#iframe-main").height($(window).height()-90);
+        $("#sidebar").height($(window).height()-50);
+    }
+
+    $(function(){
+        init();
+        $(window).resize(function(){
+            init();
+        });
+    });
+
+    </script>
+</body>
+</html>

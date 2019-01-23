@@ -1,0 +1,18 @@
+/* 内联对象呈递到同一行 */
+.control-group .controls label{
+    display:inline-block;
+}
+/* 表单验证提示错误*/
+input.error {
+    border: 1px solid #E6594E;
+}
+label.error, label.tip {
+    font-size: 14px;
+    text-align: left;
+    margin-left: 10px;
+    padding-left: 20px;
+    color: red;
+}
+/* 表单验证提示错误*/
+
+textarea.error{ border: 1px solid #FF0000 !important;}

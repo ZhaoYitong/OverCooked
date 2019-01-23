@@ -1,0 +1,300 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>财务报表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/uniform.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/select2.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/matrix-style2.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/matrix-media.css' %}" />
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.css' %}"  />
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" />
+        <style>
+            html, body, #main {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+            #main {
+                background: #fff;
+            }
+        </style>
+</head>
+<body>
+<div id="content">
+  <div id="content-header">
+    <h1>财务收支报表</h1>
+  </div>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+            <h5>收支统计</h5>
+          </div>
+          <div class="widget-content">
+            <div id="DataTables_Table_0_length" class="dataTables_length">
+              <p id="choices_top">
+                <nobr>
+                  日期选择：
+                  <input type="datetime-local" value="" id="t_start" onchange="update()">-
+                  <input type="datetime-local" value="" id="t_end" onchange="update()">
+                </nobr>
+              </p>
+            </div>
+               <div id="main" style="width: 1000px;height:800px;"></div>
+{#            <div id="placeholder"></div>#}
+{#            <p id="choices"></p>#}
+              <br>
+              <hr>
+          </div>
+        </div>
+
+
+         <div class="widget-box">
+          <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+            <h5>收支明细</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table" id="querytable">
+              <thead>
+                <tr>
+                  <th>记录编号</th>
+                  <th>记录类型</th>
+                  <th>单号</th>
+                  <th>现金流</th>
+                  <th>记录日期</th>
+                  <th>备注</th>
+                </tr>
+              </thead>
+              <tbody id=total_table>
+                {% for item in content %}
+                  <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.flowType }}</td>
+                    <td>{{ item.fromId }}</td>
+                    <td>{{ item.flow }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.marks }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.ui.custom.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/nicescroll/jquery.nicescroll.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.uniform.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/matrix.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/matrix.tables.js' %}"></script>
+
+
+<script type="text/javascript">
+$(function () {
+  var now = new Date();
+  var year = now.getFullYear();
+  var month = now.getMonth() > 9 ? String(now.getMonth() + 1) : 0 + String(now.getMonth() + 1);
+  var date = now.getDate() > 9 ? String(now.getDate()) : 0 + String(now.getDate());
+  $('#t_start').val('2018-05-27T01:00');
+  $('#t_end').val(year+'-'+month+'-'+date+'T'+'23:00');
+});
+</script>
+
+<script type="text/javascript">
+function update() {
+  var content = {"command":"query", "t_start": Date.parse($('#t_start').val())/1000,
+                "t_end": Date.parse($('#t_end').val())/1000};
+  $.ajax({
+    type: "POST",
+    url: "/financial/financialStatement/",
+    data: JSON.stringify(content),
+    datatype: "text",
+    success: function(result) {
+      if (result['content'] == 'table') {
+        var datatable = result['data'];
+        $('#total_table').empty();
+        $.each(datatable, function (index, item) {
+          $('#total_table').append('<tr><td>'+item['id']+'</td><td>'+item['flowType']+'</td><td>'+item['fromId']+
+            '</td><td>'+item['flow']+'</td><td>'+item['date']+'</td><tr>');
+        });
+      }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      alert(errorThrown);
+    },
+  });
+}
+{{ all_arr_sal }}
+</script>
+<!-- echart add -->
+<script src="{% static 'js/echart/echarts.min.js' %}"></script>
+<script src="{% static 'js/echart/esl.js' %}"></script>
+<script src="{% static 'js/echart/config.js' %}"></script>
+  <script type="text/javascript">
+$(document).ready(function(){
+require([
+    '/static/js/echart/echarts.min', // requirment for echarts
+], function (echarts) {
+
+    // 营业额
+    // 工资
+    // 采购
+    // 汇总
+
+    var chart = echarts.init(document.getElementById('main'));
+
+    var xAxisData = [];
+    var data1 = [];
+    var data2 = [];
+    var data3 = [];
+    var data4 = [];
+
+
+    // 插入数据按照以下
+   for (var i = 0; i < 100; i++) {
+        xAxisData.push('类目' + i);
+        data1.push((Math.random() * 5).toFixed(2));
+        data2.push(Math.random().toFixed(2));
+        data3.push((Math.random() + 0.5).toFixed(2));
+        data4.push((Math.random() + 0.3).toFixed(2));
+    }
+
+    get_arr = JSON.stringify({{ all_arr_ord }})
+    console.log(get_arr);
+  {#  var get_arr_content = {{ all_arr }}#}
+  {#  for (var i=0;i<get_arr.length;i++){#}
+  {#      xAxisData.push(get_arr[i]);#}
+  {#      data1.push(get_arr_content['pur'][i]['fund'].float)#}
+  {#      data2.push(get_arr_content['sal'][i]['fund'].float)#}
+  {#      data3.push(get_arr_content['ord'][i]['fund'].float)#}
+  {##}
+//
+
+
+    //固定数据插入
+    var data = [["4.70","4.69","2.48","0.77","3.08","4.57","2.68","3.35","0.37","1.86","2.68","0.64","1.82","1.88","0.31","0.45","4.48","3.08","1.58","2.98","1.87","0.96","3.43","2.58","0.41","2.69","0.59","3.47","4.33","1.75","0.51","1.01","1.60","3.62","2.29","2.40","1.52","2.30","0.18","3.99","0.26","2.92","2.94","0.54","2.98","3.71","2.24","0.32","1.98","2.56","1.81","4.67","2.49","1.73","1.79","2.79","3.39","1.83","3.24","3.76","1.23","1.69","3.55","2.66","1.83","3.69","2.70","0.75","0.71","1.44","3.23","1.49","1.50","3.61","4.41","1.26","2.93","2.84","4.11","0.80","2.67","2.59","2.71","4.85","1.28","1.21","4.32","4.04","1.15","4.38","4.41","4.94","4.13","0.86","1.97","3.58","3.02","1.29","1.47","3.75"],
+                ["0.78","0.90","0.54","0.75","0.68","0.68","0.84","0.87","0.78","0.79","0.77","0.34","0.81","0.80","0.28","0.87","0.98","0.92","0.66","0.87","0.88","0.56","0.34","0.67","0.60","0.00","0.22","0.87","0.81","0.69","0.41","0.02","0.18","0.55","0.48","0.90","0.62","0.17","0.37","0.35","0.31","0.78","0.34","0.56","0.22","0.87","0.55","0.94","0.58","0.66","0.33","0.73","0.78","0.44","0.79","0.12","0.81","0.77","0.33","0.30","0.86","0.87","0.09","0.91","0.90","0.34","0.76","0.93","0.55","0.41","0.63","0.96","0.80","0.41","0.53","0.53","0.66","0.24","0.24","0.99","0.92","0.85","0.44","0.92","0.28","0.61","0.20","0.74","0.52","0.91","0.42","0.08","0.00","0.57","0.81","0.39","0.41","0.72","0.02","0.20"],
+                ["1.17","0.65","0.98","1.08","1.02","1.41","1.01","1.17","0.63","0.94","0.78","1.43","0.67","1.09","1.29","0.60","0.50","1.38","0.76","0.94","0.79","1.44","0.55","1.48","1.13","0.63","1.07","0.57","1.43","0.81","0.87","0.70","1.04","1.43","1.00","0.50","0.54","0.57","0.97","0.58","1.19","0.73","0.76","0.75","1.39","0.93","0.60","1.28","1.14","1.18","0.60","0.59","1.46","0.64","1.44","0.59","1.49","0.84","0.71","1.44","1.11","1.18","1.40","0.64","1.15","1.07","1.35","0.86","1.13","1.41","1.03","0.57","1.44","0.93","1.47","1.16","1.40","1.14","0.97","0.78","1.49","0.59","0.99","1.35","0.88","1.02","1.16","1.07","0.81","0.87","1.34","0.98","1.17","1.46","0.71","1.13","0.80","1.24","0.76","0.68"],
+                ["1.04","0.54","0.55","1.05","1.20","1.13","0.53","0.63","0.82","0.52","0.86","0.33","0.64","1.14","0.47","0.72","0.97","1.18","1.02","0.53","1.14","1.24","1.13","0.60","0.47","0.94","0.64","0.43","0.71","0.33","0.46","0.82","0.80","0.97","0.43","1.29","0.65","0.92","0.63","0.58","0.31","1.09","0.35","0.43","1.19","0.47","0.59","0.52","0.79","0.69","0.54","0.39","0.33","1.26","0.40","0.76","0.80","0.96","0.82","1.26","0.70","0.50","0.67","1.27","1.24","0.49","0.94","0.97","0.90","1.03","1.28","0.46","0.57","1.23","0.40","0.71","1.08","0.51","1.03","0.38","0.81","0.44","1.02","0.79","1.08","1.01","0.66","0.80","0.65","0.97","0.56","0.33","0.61","0.92","0.40","0.77","1.05","1.21","0.34","0.84"]
+                ];
+
+    chart.setOption({
+        legend: {
+           // data: ['营业', '采购', '工资', '汇总'],
+            data: ['营业', '采购', '工资'],
+            // legend 风格的设置
+            align: 'left'
+        },
+        toolbox: {
+            // y: 'bottom',
+            feature: {
+                magicType: {
+                    type: ['line', 'bar', 'stack', 'tiled']
+                },
+                dataZoom: {
+                    yAxisIndex: false
+                },
+                dataView: {},
+                saveAsImage: {
+                    pixelRatio: 2
+                }
+            }
+        },
+        tooltip: {},
+        // 设置初始显示区域
+        dataZoom: [{
+            startValue: 48,
+            endValue: 99,
+            type: 'inside'
+        }, {
+            startValue: 48,
+            endValue: 99,
+            type: 'slider'
+        }],
+        xAxis: {
+            name:'日期',
+            data: xAxisData,
+            //多少个显示一段
+            //splitNumber:20,
+            silent: false,
+            splitLine: {
+                show: false
+            },
+            splitArea: {
+                show: false
+            }
+        },
+        yAxis: {
+            name:'金额',
+            splitArea: {
+                show: false
+            }
+        },
+         //数据系列，一个图表可能包含多个系列，每一个系列可能包含多个数据
+        series: [{
+            name: '营业',
+            type: 'bar',
+            //stack: 'one',
+            stack:'收',
+            //data: data[0]
+            data:data1
+        }, {
+           // show: false,
+            name: '采购',
+            type: 'bar',
+           // stack: 'one',
+            stack:'out',
+            data: data2
+        }, {
+            show: false,
+            name: '工资',
+            type: 'bar',
+            //stack: 'two',
+            stack:'out',
+            //data: data[2]
+            data:data3
+        }, {
+            name: '汇总',
+            type: 'bar',
+            //stack: 'two',
+            stack:'in',
+            //data: data[3],
+            data:data4,
+            ////图形是否不响应和触发鼠标事件，默认为 false，即响应和触发鼠标事件。
+            silent: true
+        }],
+        animationDelay: function (idx) {
+            return idx * 5;
+        },
+        animationDelayUpdate: function (idx) {
+            return idx * 5;
+        }
+    });
+
+    chart.on('click', function (params) {
+        console.log(params);
+    });
+
+    window.onresize = chart.resize;
+});
+
+});
+</script>
+</html>

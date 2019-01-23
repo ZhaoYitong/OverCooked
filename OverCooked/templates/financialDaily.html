@@ -1,0 +1,136 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>营业日结算</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/matrix-style2.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/matrix-media.css' %}" />
+  <link href="{%  static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+</head>
+<body>
+<div id="content">
+  <div id="content-header">
+    <h1>营业日结算</h1>
+  </div>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>订单记录</h5>
+            <div style="float: right; margin:4px 10px"><button class="btn btn-success" onclick="confirm()">确认入账</button></div>
+          </div>
+          <div class="widget-content">
+            <div id="DataTables_Table_0_length" class="dataTables_length">
+              <p id="choices_top">
+                <nobr>
+                  日期：
+                  <input type="datetime-local" value="" id="today" onchange="update()">
+                </nobr>
+              </p>
+            </div>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table">
+              <thead>
+                <tr>
+                  <th>订单编号</th>
+                  <th>订单类型</th>
+                  <th>订单总价</th>
+                  <th>下单日期</th>
+                  <th>已入账</th>
+                </tr>
+              </thead>
+              <tbody id="daily_table">
+                {% for item in content %}
+                  <tr>
+                    <td>{{ item.order_id }}</td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.checked }}</td>
+                  </tr>
+                {% endfor %}
+                <tr><td colspan="5"><strong>总价:￥</strong><strong id="sum">{{ sum }}</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.ui.custom.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/nicescroll/jquery.nicescroll.min.js' %}"></script>
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+
+<script type="text/javascript">
+var now = new Date();
+var year = now.getFullYear();
+var month = now.getMonth() > 9 ? String(now.getMonth() + 1) : 0 + String(now.getMonth() + 1);
+var date = now.getDate() > 9 ? String(now.getDate()) : 0 + String(now.getDate());
+$('#today').val(year+'-'+month+'-'+date+'T'+'00:00');
+
+
+var confirm_ids = [];
+
+function update() {
+  var content = {"command":"query", "date": Date.parse($('#today').val())/1000};
+  $.ajax({
+    type: "POST",
+    url: "/financial/daily/",
+    data: JSON.stringify(content),
+    datatype: "text",
+    success: function(result) {
+      confirm_ids = [];
+      if (result['content'] == 'table') {
+        var datatable = result['data'];
+        $('#daily_table').empty();
+        var sum = 0;
+        $.each(datatable, function (index, item) {
+          $('#daily_table').append('<tr><td>'+item['order_id']+'</td><td>'+item['type']+'</td><td>'+item['price']+
+            '</td><td>'+item['date']+'</td><td>'+item['checked']+'</td><tr>');
+          confirm_ids.push(item['order_id']);
+          sum += parseFloat(item['price']);
+        });
+        $('#daily_table').append('<tr><td colspan="5"><strong>总价:￥</strong><strong id="sum">'+Math.round(sum*100)/100+'</strong></td></tr>')
+      }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      alert(errorThrown);
+    },
+  });
+}
+
+function confirm() {
+  if (confirm_ids.length == 0) {
+    return
+  }
+  var content = {"command": "insert", "ids": confirm_ids};
+
+  $.ajax({
+    type: "POST",
+    url: "/financial/daily/",
+    data: JSON.stringify(content),
+    datatype: "text",
+    success: function(result) {
+      alert(result['status']);
+      $(window).attr('location','/financial/daily/');
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      alert(errorThrown);
+    },
+  });
+}
+
+</script>
+</body>
+</html>
